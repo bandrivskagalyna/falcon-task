@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <script type="text/javascript">
+   			var socket = new WebSocket("ws://" + location.host + "/websocket")
+
+   			socket.onmessage = function(event) {
+     		  alert("Received: " + event.data); // only for testing... will be replaced later
+      		  document.getElementById('message').innerHTML = event.data;
+   			}
+   		    alert('end')
+		</script>
+	 </head>
+    <body>
+        <span>Delivered message:</span>
+		<div id="message"></div>
+    </body>
+</html>
+
+
