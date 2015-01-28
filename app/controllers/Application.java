@@ -27,7 +27,7 @@ public class Application extends Controller {
     }
     
     public static Result getAllMessages() {
-        return ok(messagesQueue.values().toArray().toString());
+        return ok(allMessages.render(messagesQueue.values()));
     }
 
     @BodyParser.Of(BodyParser.Json.class)

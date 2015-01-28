@@ -1,0 +1,15 @@
+@(messages: Collection[String])
+
+ <head>
+ </head>
+ <body>
+    @if(messages.isEmpty()) {
+      <h1>Nothing to display</h1>
+    } else {
+      <ul> 
+        @for(message <- messages) {
+          <li>@message</li>
+        } 
+      </ul>
+    }
+</body>
