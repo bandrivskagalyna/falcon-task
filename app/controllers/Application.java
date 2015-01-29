@@ -1,36 +1,49 @@
 package controllers;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 import play.mvc.*;
-import services.RedisService;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
+import services.database.RedisService;
+import services.queue.Subscriber;
 import views.html.*;
 
 public class Application extends Controller {
 
-	private static RedisService redisDB = new RedisService();
+	public static final String PUB_SUB_CHANNEL = "pubSubChannel";
+	public static JedisPool jedisPool = new JedisPool(new JedisPoolConfig(),
+			"localhost");
 
 	private static List<WebSocket.Out<String>> channels = new ArrayList<>();
 
-	// temporary stub for Redis pub/sub
-	private static Map<UUID, String> messagesQueue = new HashMap<>();
-
 	public static Result index() {
-        return ok(index.render("Your new application is ready ."));
+		return ok(index.render("Your new application is ready ."));
 	}
 
 	public static Result deliveredMessage() {
+
+		// Add subscriber
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Jedis j = jedisPool.getResource();
+					j.subscribe(new Subscriber(), PUB_SUB_CHANNEL);
+				} catch (Exception e) {
+				}
+			}
+		}).start();
+
 		return ok(realtimeMessages.render());
 	}
 
 	public static Result getAllMessages() {
-		List<Object> messages = redisDB.getAllValues();
+		List<Object> messages = RedisService.getInstance().getAllValues();
 		return ok(allMessages.render(messages));
 	}
 
@@ -41,9 +54,18 @@ public class Application extends Controller {
 		if (messageText == null) {
 			return badRequest("Missing parameter [messageText]");
 		}
-		messagesQueue.put(UUID.randomUUID(), messageText);
+		// messagesQueue.put(UUID.randomUUID(), messageText);
 		for (WebSocket.Out<String> channel : channels) {
+			// write message to show on deliveredMessages html page
 			channel.write(messageText);
+
+			Jedis j = jedisPool.getResource();
+			try {
+				// All messages are pushed through the pub/sub channel
+				j.publish(PUB_SUB_CHANNEL, messageText);
+			} finally {
+				jedisPool.returnResource(j);
+			}
 		}
 		return ok();
 	}
