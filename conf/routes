@@ -2,20 +2,17 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# Home page
-GET     /                           controllers.Application.index()
-
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
-GET     /deliveredMessage           controllers.Application.deliveredMessage()
-
-# Call thru WebSoket
-GET     /websocket                  controllers.Application.websocket()
-
 # Get all messages
-GET     /allMessages                controllers.Application.getAllMessages()
+GET     /allMessages                controllers.Application.allMessages()
 
 # Send new message
 POST    /newMessage                 controllers.Application.newMessage()
 
+# Real time message delivery log
+GET     /deliveredMessages          controllers.Application.deliveredMessages()
+
+# Call through WebSoket
+GET     /webSocket                  controllers.Application.webSocket()
