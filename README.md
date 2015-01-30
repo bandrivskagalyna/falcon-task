@@ -32,7 +32,8 @@ This project uses the following tools and technologies:
 
 
 
-There are two Rest endpoint:
+There are two rest endpoints:
+
 POST /newMessage - takes dummy json input and publishes it to Redis chanel. The following json format is used:
  {"messageText": "text"}
 
@@ -49,4 +50,4 @@ GET  /deliveredMessages
 
 
 
-Redis configuration properties are stored in ../conf/aplication.conf file
+Redis configuration properties are stored in  /conf/aplication.conf file
