@@ -1,5 +1,7 @@
 package services.queue;
 
+import play.libs.Json;
+import com.fasterxml.jackson.databind.JsonNode;
 import redis.clients.jedis.Jedis;
 
 public class Publisher {
@@ -13,8 +15,7 @@ public class Publisher {
 		this.channel = channel;
 	}
 
-	public void publishMessage(String messageText) {
-		publisherJedis.publish(channel, messageText);
+	public void publishMessage(JsonNode messageJson) {
+		publisherJedis.publish(channel, Json.stringify(messageJson));
 	}
-
 }

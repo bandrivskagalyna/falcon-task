@@ -1,36 +1,32 @@
 <!DOCTYPE html>
 
 <html>
-    <head>
-        <script type="text/javascript">
-   			var socket = new WebSocket("ws://" + location.host + "/webSocket")
-      	 
-   			socket.onmessage = function(event) {
-     		  alert("Received: " + event.data); // only for testing... will be replaced later   
-      	
-      		  var newMessage = document.createElement("li");
-      		  var massageNode = document.createTextNode(event.data);
-      		  var space= document.createTextNode(" ..... ");
-      		  var timeNode = document.createTextNode(new Date().toUTCString());
+<head>
+<script type="text/javascript">
+	var socket = new WebSocket("ws://" + location.host + "/webSocket")
 
-      		  newMessage.appendChild(timeNode);
-      		  newMessage.appendChild(space);
-              newMessage.appendChild(massageNode);
+	socket.onmessage = function(event) {
+		var newMessage = document.createElement("li");
+		var massageNode = document.createTextNode(event.data);
+		var space = document.createTextNode(" ..... ");
+		var timeNode = document.createTextNode(new Date().toUTCString());
 
-      		  var container = document.getElementById("messageContainer");
-      		  container.insertBefore(newMessage, container.childNodes[0]);
+		newMessage.appendChild(timeNode);
+		newMessage.appendChild(space);
+		newMessage.appendChild(massageNode);
 
-   			}
-   		    alert('end')
-		</script>
-	 </head>
-    <body>
-        <span id="descriptipnText">Delivered messages:</span>
-            
-        <ul id="messageContainer">
-          <li>Connection established</li>
-		</ul>
-    </body>
+		var container = document.getElementById("messageContainer");
+		container.insertBefore(newMessage, container.childNodes[0]);
+	}
+</script>
+</head>
+<body>
+	<span id="descriptipnText">Delivered messages:</span>
+
+	<ul id="messageContainer">
+		<li>Connection established</li>
+	</ul>
+</body>
 </html>
 
 

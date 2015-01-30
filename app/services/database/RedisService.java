@@ -7,12 +7,13 @@ import java.util.Set;
 import java.util.UUID;
 
 import redis.clients.jedis.Jedis;
+import services.utils.ConfigurationUtils;
 
 public class RedisService {
 
 	private static RedisService instance = null;
 
-	private static Jedis jedis = new Jedis("localhost");
+	private static Jedis jedis = new Jedis(ConfigurationUtils.REDIS_HOST,ConfigurationUtils.REDIS_PORT);
 
 	protected RedisService() {
 	}
@@ -29,7 +30,7 @@ public class RedisService {
 	}
 
 	public List<Object> getAllValues() {
-		List<Object> values = new ArrayList<Object>();
+		List<Object> values = new ArrayList<>();
 		Set<String> keys = jedis.keys("*");
 		Iterator<String> it = keys.iterator();
 		while (it.hasNext()) {
